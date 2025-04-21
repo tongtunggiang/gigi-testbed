@@ -358,6 +358,22 @@
                 },
                 {
                     "label": "Floor"
+                },
+                {
+                    "label": "ExponentialImpulse"
+                },
+                {
+                    "label": "QuadraticImpulse"
+                },
+                {
+                    "label": "Parabola"
+                },
+                {
+                    "label": "Tonemap",
+                    "comment": "Not working for now"
+                },
+                {
+                    "label": "RationalBump"
                 }
             ]
         }
