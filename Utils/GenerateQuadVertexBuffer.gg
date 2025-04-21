@@ -1,0 +1,90 @@
+{
+    "$schema": "gigischema.json",
+    "name": "GenerateQuadVertexBuffer",
+    "comment": "Generate a vertex buffer representing a fullscreen quad in NDC.",
+    "version": "0.991b",
+    "shaders": [
+        {
+            "name": "GenerateQuadVertexBufferCS",
+            "fileName": "GenerateQuadVertexBufferCS.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                6,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "InOutVertexBuffer",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "VB"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "VB",
+            "fields": [
+                {
+                    "name": "Position",
+                    "type": "Float2"
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "resourceBuffer": {
+                "name": "VertexBuffer",
+                "editorPos": [
+                    -329.0,
+                    -93.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "structureType": {
+                        "name": "VB"
+                    }
+                },
+                "count": {
+                    "multiply": 6
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "GenerateQuadVB",
+                "editorPos": [
+                    -197.0,
+                    -94.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "InOutVertexBuffer",
+                        "dstNode": "VertexBuffer",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "GenerateQuadVertexBufferCS"
+                }
+            }
+        }
+    ],
+    "settings": {
+        "common": {
+            "shaderWarningAsErrors": true,
+            "createPDBsAndBinaries": true
+        }
+    }
+}
