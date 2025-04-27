@@ -1,0 +1,184 @@
+{
+    "$schema": "gigischema.json",
+    "name": "Rays, a Simple Camera, and Background",
+    "comment": "https://raytracing.github.io/books/RayTracingInOneWeekend.html#rays,asimplecamera,andbackground",
+    "version": "0.991b",
+    "variables": [
+        {
+            "name": "ImageSize",
+            "type": "Int2",
+            "dflt": "512,256"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "S5_FirstSphere",
+            "fileName": "S5_FirstSphere.hlsl",
+            "entryPoint": "MainCS",
+            "resources": [
+                {
+                    "name": "Camera",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                },
+                {
+                    "name": "Output",
+                    "type": "Texture",
+                    "access": "UAV"
+                }
+            ]
+        },
+        {
+            "name": "S4_CalculateGlobalCameraBuffer",
+            "fileName": "S4_CalculateGlobalCameraBufferCS.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "Camera",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "CameraInfo",
+            "fields": [
+                {
+                    "name": "aspectRatio",
+                    "type": "Float"
+                },
+                {
+                    "name": "focalLength",
+                    "type": "Float",
+                    "dflt": "1.0"
+                },
+                {
+                    "name": "cameraCenter",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_u",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_v",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixel00_loc",
+                    "type": "Float3"
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "actionComputeShader": {
+                "name": "S5_FirstSphere",
+                "comment": "Output a simple sky",
+                "editorPos": [
+                    221.0,
+                    -14.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "CalculateGlobalCameraBufferCS",
+                        "dstPin": "Camera"
+                    },
+                    {
+                        "srcPin": "Output",
+                        "dstNode": "Output",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S5_FirstSphere"
+                },
+                "dispatchSize": {
+                    "node": {
+                        "name": "Output"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Output",
+                "editorPos": [
+                    27.0,
+                    2.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                },
+                "size": {
+                    "variable": {
+                        "name": "ImageSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "GlobalCamera",
+                "comment": "Do global camera calculation in a separate pass.,",
+                "editorPos": [
+                    -196.0,
+                    -110.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "CameraInfo"
+                    }
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "CalculateGlobalCameraBufferCS",
+                "editorPos": [
+                    -11.0,
+                    -110.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "GlobalCamera",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S4_CalculateGlobalCameraBuffer"
+                }
+            }
+        }
+    ]
+}

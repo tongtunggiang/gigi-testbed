@@ -1,0 +1,453 @@
+{
+    "$schema": "gigischema.json",
+    "name": "Antialiasing",
+    "comment": "https://raytracing.github.io/books/RayTracingInOneWeekend.html#antialiasing",
+    "version": "0.991b",
+    "variables": [
+        {
+            "name": "ImageSize",
+            "type": "Int2",
+            "dflt": "512,256"
+        },
+        {
+            "name": "NumSpheres",
+            "type": "Int",
+            "Const": true,
+            "dflt": "2"
+        },
+        {
+            "name": "MouseState",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "MouseStateLastFrame",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iResolution",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iTime",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iTimeDelta",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrameRate",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrame",
+            "type": "Int",
+            "dflt": "0",
+            "visibility": "Host"
+        },
+        {
+            "name": "iMouse",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraPos",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraAltitudeAzimuth",
+            "type": "Float2",
+            "dflt": "0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraChanged",
+            "type": "Bool",
+            "dflt": "false",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraJitter",
+            "type": "Float2",
+            "dflt": "0.5f, 0.5f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ShadingRateImageTileSize",
+            "type": "Uint",
+            "dflt": "16",
+            "visibility": "Host"
+        },
+        {
+            "name": "WindowSize",
+            "type": "Float2",
+            "dflt": "1.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "NumSamplesPerPixel",
+            "type": "Int",
+            "dflt": "10"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "S8_Antialiasing",
+            "fileName": "S8_Antialiasing.hlsl",
+            "entryPoint": "MainCS",
+            "resources": [
+                {
+                    "name": "Camera",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                },
+                {
+                    "name": "Spheres",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Sphere"
+                        }
+                    }
+                },
+                {
+                    "name": "Output",
+                    "type": "Texture",
+                    "access": "UAV"
+                }
+            ]
+        },
+        {
+            "name": "S8_CalculateGlobalCameraBuffer",
+            "fileName": "S8_CalculateGlobalCameraBufferCS.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "Camera",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "S6_Hittable_InitializeSpheres",
+            "fileName": "S6_Hittable_InitializeSpheres.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "Spheres",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Sphere"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "CameraInfo",
+            "fields": [
+                {
+                    "name": "aspectRatio",
+                    "type": "Float"
+                },
+                {
+                    "name": "focalLength",
+                    "type": "Float",
+                    "dflt": "1.0"
+                },
+                {
+                    "name": "cameraCenter",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_u",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_v",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixel00_loc",
+                    "type": "Float3"
+                },
+                {
+                    "name": "numSamplesPerPixel",
+                    "type": "Int"
+                },
+                {
+                    "name": "pixelSampleScale",
+                    "type": "Float"
+                }
+            ]
+        },
+        {
+            "name": "Sphere",
+            "fields": [
+                {
+                    "name": "center",
+                    "type": "Float3"
+                },
+                {
+                    "name": "radius",
+                    "type": "Float"
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "actionComputeShader": {
+                "name": "S8_Antialiasing",
+                "comment": "Output a simple sky",
+                "editorPos": [
+                    221.0,
+                    -14.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "CalculateGlobalCameraBufferCS",
+                        "dstPin": "Camera"
+                    },
+                    {
+                        "srcPin": "Spheres",
+                        "dstNode": "S6_Hittable_InitializeSpheres",
+                        "dstPin": "Spheres"
+                    },
+                    {
+                        "srcPin": "Output",
+                        "dstNode": "Output",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S8_Antialiasing"
+                },
+                "dispatchSize": {
+                    "node": {
+                        "name": "Output"
+                    },
+                    "indirectBuffer": {
+                        "node": "S6_Hittable_InitializeSpheres"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Output",
+                "editorPos": [
+                    59.0,
+                    82.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                },
+                "size": {
+                    "variable": {
+                        "name": "ImageSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "GlobalCamera",
+                "comment": "Do global camera calculation in a separate pass.,",
+                "editorPos": [
+                    -260.0,
+                    -129.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "CameraInfo"
+                    }
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "CalculateGlobalCameraBufferCS",
+                "editorPos": [
+                    -75.0,
+                    -129.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "GlobalCamera",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S8_CalculateGlobalCameraBuffer"
+                },
+                "dispatchSize": {
+                    "indirectBuffer": {
+                        "node": "S6_Hittable_InitializeSpheres"
+                    }
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "S6_Hittable_InitializeSpheres",
+                "editorPos": [
+                    -59.0,
+                    -1.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Spheres",
+                        "dstNode": "Spheres",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S6_Hittable_InitializeSpheres"
+                },
+                "dispatchSize": {
+                    "indirectBuffer": {
+                        "node": "S6_Hittable_InitializeSpheres"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Spheres",
+                "editorPos": [
+                    -197.0,
+                    2.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "Sphere"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumSpheres"
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,74 @@
+{
+    "$schema": "gigischema.json",
+    "version": "0.991b",
+    "variables": [
+        {
+            "name": "ImageSize",
+            "type": "Int2",
+            "dflt": "256,256"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "S2_SimpleImageCS",
+            "fileName": "S2_SimpleImageCS.hlsl",
+            "entryPoint": "MainCS",
+            "resources": [
+                {
+                    "name": "Output",
+                    "type": "Texture",
+                    "access": "UAV"
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "actionComputeShader": {
+                "name": "SimpleImage",
+                "comment": "Output a simple image containing a gradient",
+                "editorPos": [
+                    -11.0,
+                    15.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Output",
+                        "dstNode": "Output",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "S2_SimpleImageCS"
+                },
+                "dispatchSize": {
+                    "node": {
+                        "name": "Output"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Output",
+                "editorPos": [
+                    -133.0,
+                    18.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                },
+                "size": {
+                    "variable": {
+                        "name": "ImageSize"
+                    }
+                }
+            }
+        }
+    ]
+}
