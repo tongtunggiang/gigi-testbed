@@ -3,68 +3,179 @@
     "version": "0.991b",
     "variables": [
         {
-            "name": "RenderSize",
-            "type": "Uint2",
-            "dflt": "1024, 768",
-            "visibility": "User"
-        },
-        {
-            "name": "RemapRanges",
-            "comment": "Remaps Normals and Tangents to [0-1] range when using their respective ViewMode",
-            "type": "Bool",
-            "dflt": "1",
-            "visibility": "User"
-        },
-        {
-            "name": "ViewerColor",
+            "name": "MouseState",
             "type": "Float4",
-            "dflt": "1, 1, 1, 1",
-            "visibility": "User",
-            "UISettings": {
-                "UIHint": "Color"
-            }
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
         },
         {
-            "name": "ViewProjMtx",
-            "type": "Float4x4"
+            "name": "MouseStateLastFrame",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
         },
         {
-            "name": "InvViewProjMtx",
-            "type": "Float4x4"
+            "name": "iResolution",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
         },
         {
-            "name": "CameraPos",
-            "type": "Float3"
+            "name": "iTime",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
         },
         {
-            "name": "Skybox",
-            "type": "Bool",
-            "dflt": "true",
-            "visibility": "User"
+            "name": "iTimeDelta",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrameRate",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrame",
+            "type": "Int",
+            "dflt": "0",
+            "visibility": "Host"
+        },
+        {
+            "name": "iMouse",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
         },
         {
             "name": "InvViewMtx",
-            "type": "Float4x4"
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraPos",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraAltitudeAzimuth",
+            "type": "Float2",
+            "dflt": "0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraChanged",
+            "type": "Bool",
+            "dflt": "false",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraJitter",
+            "type": "Float2",
+            "dflt": "0.5f, 0.5f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ShadingRateImageTileSize",
+            "type": "Uint",
+            "dflt": "16",
+            "visibility": "Host"
+        },
+        {
+            "name": "WindowSize",
+            "type": "Float2",
+            "dflt": "1.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "RenderSize",
+            "type": "Uint2",
+            "dflt": "1920,1080",
+            "visibility": "User",
+            "transient": true
         },
         {
             "name": "NumDirectionalLights",
             "type": "Int",
-            "dflt": "1"
+            "dflt": "1",
+            "visibility": "User"
         },
         {
             "name": "NumPointLights",
             "type": "Int",
-            "dflt": "0"
+            "dflt": "0",
+            "visibility": "User"
         },
         {
             "name": "NumSpotights",
             "type": "Int",
-            "dflt": "0"
+            "dflt": "0",
+            "visibility": "User"
         },
         {
             "name": "NumMaterials",
             "type": "Int",
-            "dflt": "1"
+            "dflt": "1",
+            "visibility": "User"
         }
     ],
     "shaders": [
@@ -295,167 +406,20 @@
     "nodes": [
         {
             "resourceBuffer": {
-                "name": "ModelVertexBuffer",
+                "name": "Materials ",
                 "editorPos": [
-                    -157.0,
-                    -158.0
+                    -613.0,
+                    130.0
                 ],
-                "visibility": "Imported",
+                "visibility": "Exported",
                 "format": {
                     "structureType": {
-                        "name": "VB"
+                        "name": "Material"
                     }
-                }
-            }
-        },
-        {
-            "resourceTexture": {
-                "name": "Depth",
-                "editorPos": [
-                    75.0,
-                    -14.0
-                ],
-                "format": {
-                    "format": "D32_Float"
                 },
-                "size": {
+                "count": {
                     "variable": {
-                        "name": "RenderSize"
-                    }
-                }
-            }
-        },
-        {
-            "actionDrawCall": {
-                "name": "GeometryPass",
-                "editorPos": [
-                    213.0,
-                    -125.0
-                ],
-                "linkProperties": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "vertexShader": {
-                    "name": "BasePassVS"
-                },
-                "pixelShader": {
-                    "name": "BasePassPS"
-                },
-                "instanceCount": 3,
-                "depthTargetClear": true,
-                "depthTest": "Greater",
-                "colorTargetSettings": [
-                    {
-                        "clear": true,
-                        "clearColor": [
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            1.0
-                        ],
-                        "srcBlend": "SrcAlpha",
-                        "destBlend": "InvSrcAlpha"
-                    },
-                    {
-                        "clear": true,
-                        "clearColor": [
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            1.0
-                        ]
-                    },
-                    {
-                        "clear": true,
-                        "clearColor": [
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            0.10000000149011612,
-                            1.0
-                        ]
-                    },
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "cullMode": "Back",
-                "frontIsCounterClockwise": false,
-                "shadingRateImage": {
-                    "node": "Normal"
-                },
-                "vertexBuffer": {
-                    "node": "ModelViewerCS",
-                    "pin": "VertexBuffer"
-                },
-                "instanceBuffer": {
-                    "node": "InstanceBuffer",
-                    "pin": "resource"
-                },
-                "colorTargets": [
-                    {
-                        "node": "Position",
-                        "pin": "resource"
-                    },
-                    {
-                        "node": "Normal",
-                        "pin": "resource"
-                    },
-                    {
-                        "node": "Albedo",
-                        "pin": "resource"
-                    },
-                    {
-                        "node": "LightingPass"
-                    },
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "depthTarget": {
-                    "node": "Depth",
-                    "pin": "resource"
-                }
-            }
-        },
-        {
-            "actionComputeShader": {
-                "name": "ModelViewerCS",
-                "editorPos": [
-                    37.0,
-                    -158.0
-                ],
-                "linkProperties": [
-                    {},
-                    {}
-                ],
-                "connections": [
-                    {
-                        "srcPin": "VertexBuffer",
-                        "dstNode": "ModelVertexBuffer",
-                        "dstPin": "resource"
-                    }
-                ],
-                "shader": {
-                    "name": "ModelViewerCS"
-                },
-                "dispatchSize": {
-                    "node": {
-                        "name": "ModelVertexBuffer"
-                    },
-                    "indirectBuffer": {
-                        "node": "Normal"
+                        "name": "NumMaterials"
                     }
                 }
             }
@@ -464,11 +428,12 @@
             "resourceTexture": {
                 "name": "Position",
                 "editorPos": [
-                    75.0,
-                    34.0
+                    -613.0,
+                    -14.0
                 ],
+                "visibility": "Exported",
                 "format": {
-                    "format": "RGBA16_Float"
+                    "format": "RGBA32_Float"
                 },
                 "size": {
                     "variable": {
@@ -481,11 +446,12 @@
             "resourceTexture": {
                 "name": "Normal",
                 "editorPos": [
-                    75.0,
-                    82.0
+                    -613.0,
+                    34.0
                 ],
+                "visibility": "Exported",
                 "format": {
-                    "format": "RGBA16_Float"
+                    "format": "RGBA32_Float"
                 },
                 "size": {
                     "variable": {
@@ -498,9 +464,10 @@
             "resourceTexture": {
                 "name": "Albedo",
                 "editorPos": [
-                    75.0,
-                    130.0
+                    -613.0,
+                    82.0
                 ],
+                "visibility": "Exported",
                 "format": {
                     "format": "RGBA8_Unorm"
                 },
@@ -512,17 +479,425 @@
             }
         },
         {
-            "actionDrawCall": {
-                "name": "LightingPass",
+            "resourceTexture": {
+                "name": "Depth",
                 "editorPos": [
-                    558.0,
-                    54.0
+                    -613.0,
+                    -62.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "D32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "VertexBuffer_Spot",
+                "editorPos": [
+                    -614.0,
+                    -142.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "VB"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "VertexBuffer_Floor",
+                "editorPos": [
+                    -315.0,
+                    -142.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "VB"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "MaterialID",
+                "editorPos": [
+                    -613.0,
+                    178.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "R32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "actionSubGraph": {
+                "name": "Draw Spot",
+                "editorPos": [
+                    -411.0,
+                    -62.0
                 ],
                 "linkProperties": [
                     {},
                     {},
                     {},
                     {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "ModelVertexBuffer",
+                        "dstNode": "VertexBuffer_Spot",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Depth",
+                        "dstNode": "Depth",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Position",
+                        "dstNode": "Position",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Normal",
+                        "dstNode": "Normal",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Albedo",
+                        "dstNode": "Albedo",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Materials",
+                        "dstNode": "Materials ",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "MaterialID",
+                        "dstNode": "MaterialID",
+                        "dstPin": "resource"
+                    }
+                ],
+                "fileName": "DrawGeometry.gg",
+                "subGraphData": {
+                    "importedResources": [
+                        "ModelVertexBuffer",
+                        "Depth",
+                        "Position",
+                        "Normal",
+                        "Albedo",
+                        "Materials",
+                        "MaterialID"
+                    ],
+                    "variables": [
+                        {
+                            "name": "ViewMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvViewMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "ProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "ViewProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvViewProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "Position",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Scale",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_Index",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_DiffuseAlbedo",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_FresnelR0",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_Shininess",
+                            "visibility": "User"
+                        }
+                    ]
+                },
+                "variableSettings": [
+                    {
+                        "name": "ViewMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ViewMtx"
+                    },
+                    {
+                        "name": "InvViewMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvViewMtx"
+                    },
+                    {
+                        "name": "ProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ProjMtx"
+                    },
+                    {
+                        "name": "InvProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvProjMtx"
+                    },
+                    {
+                        "name": "ViewProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ViewProjMtx"
+                    },
+                    {
+                        "name": "InvViewProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvViewProjMtx"
+                    },
+                    {
+                        "name": "Position",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Scale",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_Index",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_DiffuseAlbedo",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_FresnelR0",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_Shininess",
+                        "visibility": "User"
+                    }
+                ]
+            }
+        },
+        {
+            "actionSubGraph": {
+                "name": "Draw Floor",
+                "editorPos": [
+                    -158.0,
+                    -62.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "ModelVertexBuffer",
+                        "dstNode": "VertexBuffer_Floor",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Depth",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "Depth"
+                    },
+                    {
+                        "srcPin": "Position",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "Position"
+                    },
+                    {
+                        "srcPin": "Normal",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "Normal"
+                    },
+                    {
+                        "srcPin": "Albedo",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "Albedo"
+                    },
+                    {
+                        "srcPin": "Materials",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "Materials"
+                    },
+                    {
+                        "srcPin": "MaterialID",
+                        "dstNode": "Draw Spot",
+                        "dstPin": "MaterialID"
+                    }
+                ],
+                "fileName": "DrawGeometry.gg",
+                "subGraphData": {
+                    "importedResources": [
+                        "ModelVertexBuffer",
+                        "Depth",
+                        "Position",
+                        "Normal",
+                        "Albedo",
+                        "Materials",
+                        "MaterialID"
+                    ],
+                    "variables": [
+                        {
+                            "name": "ViewMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvViewMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "ProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "ViewProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "InvViewProjMtx",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "Position",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Scale",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_Index",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_DiffuseAlbedo",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_FresnelR0",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "Material_Shininess",
+                            "visibility": "User"
+                        }
+                    ]
+                },
+                "variableSettings": [
+                    {
+                        "name": "ViewMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ViewMtx"
+                    },
+                    {
+                        "name": "InvViewMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvViewMtx"
+                    },
+                    {
+                        "name": "ProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ProjMtx"
+                    },
+                    {
+                        "name": "InvProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvProjMtx"
+                    },
+                    {
+                        "name": "ViewProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "ViewProjMtx"
+                    },
+                    {
+                        "name": "InvViewProjMtx",
+                        "visibility": "Host",
+                        "replaceWithStr": "InvViewProjMtx"
+                    },
+                    {
+                        "name": "Position",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Scale",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_Index",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_DiffuseAlbedo",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_FresnelR0",
+                        "visibility": "User"
+                    },
+                    {
+                        "name": "Material_Shininess",
+                        "visibility": "User"
+                    }
+                ]
+            }
+        },
+        {
+            "actionSubGraph": {
+                "name": "Lighting",
+                "editorPos": [
+                    476.0,
+                    -68.0
+                ],
+                "linkProperties": [
                     {},
                     {},
                     {},
@@ -534,103 +909,116 @@
                 ],
                 "connections": [
                     {
-                        "srcPin": "g_PositionTexture",
-                        "dstNode": "GeometryPass",
-                        "dstPin": "colorTarget0"
-                    },
-                    {
-                        "srcPin": "g_NormalTexture",
-                        "dstNode": "GeometryPass",
-                        "dstPin": "colorTarget1"
-                    },
-                    {
-                        "srcPin": "g_AlbedoTexture",
-                        "dstNode": "GeometryPass",
-                        "dstPin": "colorTarget2"
-                    },
-                    {
-                        "srcPin": "g_DirectionalLights",
-                        "dstNode": "DirectionalLights",
+                        "srcPin": "Quad",
+                        "dstNode": "Quad",
                         "dstPin": "resource"
                     },
                     {
-                        "srcPin": "g_Materials",
-                        "dstNode": "Materials ",
+                        "srcPin": "DirectionalLights",
+                        "dstNode": "Directional lighits",
                         "dstPin": "resource"
-                    }
-                ],
-                "vertexShader": {
-                    "name": "LightingPassVS"
-                },
-                "pixelShader": {
-                    "name": "LightingPassPS"
-                },
-                "shadingRateImage": {
-                    "node": "LightingPass"
-                },
-                "vertexBuffer": {
-                    "node": "Quad",
-                    "pin": "resource"
-                },
-                "indexBuffer": {
-                    "node": "LightingPass"
-                },
-                "colorTargets": [
-                    {
-                        "node": "SceneColor",
-                        "pin": "resource"
                     },
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "depthTarget": {
-                    "node": "LightingPass"
-                }
-            }
-        },
-        {
-            "resourceTexture": {
-                "name": "SceneColor",
-                "editorPos": [
-                    395.0,
-                    322.0
-                ],
-                "format": {
-                    "format": "RGBA8_Unorm_sRGB"
-                },
-                "size": {
-                    "variable": {
-                        "name": "RenderSize"
+                    {
+                        "srcPin": "Materials ",
+                        "dstNode": "Draw Floor",
+                        "dstPin": "Materials"
+                    },
+                    {
+                        "srcPin": "Position",
+                        "dstNode": "Draw Floor",
+                        "dstPin": "Position"
+                    },
+                    {
+                        "srcPin": "Normal",
+                        "dstNode": "Draw Floor",
+                        "dstPin": "Normal"
+                    },
+                    {
+                        "srcPin": "Albedo",
+                        "dstNode": "Draw Floor",
+                        "dstPin": "Albedo"
+                    },
+                    {
+                        "srcPin": "MaterialID",
+                        "dstNode": "Draw Floor",
+                        "dstPin": "MaterialID"
+                    },
+                    {
+                        "srcPin": "SceneColor"
                     }
-                }
+                ],
+                "fileName": "DeferredLighting.gg",
+                "subGraphData": {
+                    "importedResources": [
+                        "Quad",
+                        "DirectionalLights",
+                        "Materials ",
+                        "Position",
+                        "Normal",
+                        "Albedo",
+                        "MaterialID"
+                    ],
+                    "exportedResources": [
+                        "SceneColor"
+                    ],
+                    "variables": [
+                        {
+                            "name": "CameraPos",
+                            "visibility": "Host"
+                        },
+                        {
+                            "name": "NumDirectionalLights",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "NumPointLights",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "NumSpotights",
+                            "visibility": "User"
+                        },
+                        {
+                            "name": "NumMaterials",
+                            "visibility": "User"
+                        }
+                    ]
+                },
+                "variableSettings": [
+                    {
+                        "name": "CameraPos",
+                        "visibility": "Host",
+                        "replaceWithStr": "CameraPos"
+                    },
+                    {
+                        "name": "NumDirectionalLights",
+                        "visibility": "User",
+                        "replaceWithStr": "NumDirectionalLights"
+                    },
+                    {
+                        "name": "NumPointLights",
+                        "visibility": "User",
+                        "replaceWithStr": "NumPointLights"
+                    },
+                    {
+                        "name": "NumSpotights",
+                        "visibility": "User",
+                        "replaceWithStr": "NumSpotights"
+                    },
+                    {
+                        "name": "NumMaterials",
+                        "visibility": "User",
+                        "replaceWithStr": "NumMaterials"
+                    }
+                ]
             }
         },
         {
             "resourceBuffer": {
-                "name": "Quad",
+                "name": "Directional lighits",
                 "editorPos": [
-                    395.0,
-                    274.0
-                ],
-                "visibility": "Imported",
-                "format": {
-                    "structureType": {
-                        "name": "QuadVB"
-                    }
-                }
-            }
-        },
-        {
-            "resourceBuffer": {
-                "name": "DirectionalLights",
-                "editorPos": [
-                    253.0,
-                    114.0
+                    279.0,
+                    -94.0
                 ],
                 "visibility": "Imported",
                 "format": {
@@ -647,71 +1035,19 @@
         },
         {
             "resourceBuffer": {
-                "name": "PointLights",
+                "name": "Quad",
                 "editorPos": [
-                    379.0,
-                    -238.0
+                    283.0,
+                    -142.0
                 ],
                 "visibility": "Imported",
                 "format": {
                     "structureType": {
-                        "name": "Light"
+                        "name": "QuadVB"
                     }
                 },
                 "count": {
-                    "variable": {
-                        "name": "NumPointLights"
-                    }
-                }
-            }
-        },
-        {
-            "resourceBuffer": {
-                "name": "SpotLights",
-                "editorPos": [
-                    395.0,
-                    -190.0
-                ],
-                "visibility": "Imported",
-                "format": {
-                    "structureType": {
-                        "name": "Light"
-                    }
-                },
-                "count": {
-                    "variable": {
-                        "name": "NumSpotights"
-                    }
-                }
-            }
-        },
-        {
-            "resourceBuffer": {
-                "name": "InstanceBuffer",
-                "editorPos": [
-                    43.0,
-                    -78.0
-                ],
-                "visibility": "Imported"
-            }
-        },
-        {
-            "resourceBuffer": {
-                "name": "Materials ",
-                "editorPos": [
-                    250.0,
-                    178.0
-                ],
-                "visibility": "Imported",
-                "format": {
-                    "structureType": {
-                        "name": "Material"
-                    }
-                },
-                "count": {
-                    "variable": {
-                        "name": "NumMaterials"
-                    }
+                    "multiply": 6
                 }
             }
         }
@@ -756,6 +1092,30 @@
                 {
                     "label": "PlasticShaded"
                 }
+            ]
+        }
+    ],
+    "editorGroupNodes": [
+        {
+            "name": "Base pass",
+            "position": [
+                -656.0,
+                -192.0
+            ],
+            "size": [
+                720.0,
+                457.0
+            ]
+        },
+        {
+            "name": "Lighting pass",
+            "position": [
+                240.0,
+                -208.0
+            ],
+            "size": [
+                396.0,
+                480.0
             ]
         }
     ]

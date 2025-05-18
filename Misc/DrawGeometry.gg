@@ -1,0 +1,496 @@
+{
+    "$schema": "gigischema.json",
+    "version": "0.991b",
+    "variables": [
+        {
+            "name": "ViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "Position",
+            "type": "Float3",
+            "visibility": "User"
+        },
+        {
+            "name": "Scale",
+            "type": "Float",
+            "dflt": "1",
+            "visibility": "User",
+            "UISettings": {
+                "UIHint": "Slider",
+                "min": "-100",
+                "max": "100"
+            }
+        },
+        {
+            "name": "Material_Index",
+            "type": "Uint",
+            "visibility": "User"
+        },
+        {
+            "name": "Material_DiffuseAlbedo",
+            "type": "Float4",
+            "visibility": "User"
+        },
+        {
+            "name": "Material_FresnelR0",
+            "type": "Float3",
+            "visibility": "User"
+        },
+        {
+            "name": "Material_Shininess",
+            "type": "Float",
+            "visibility": "User"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "BasePassVS",
+            "fileName": "BasePassVS.hlsl",
+            "type": "Vertex",
+            "entryPoint": "vsmain"
+        },
+        {
+            "name": "BasePassPS",
+            "fileName": "BasePassPS.hlsl",
+            "type": "Pixel",
+            "entryPoint": "psmain"
+        },
+        {
+            "name": "ModelViewerCS",
+            "fileName": "ModelViewerCS.hlsl",
+            "entryPoint": "csmain",
+            "NumThreads": [
+                64,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "VertexBuffer",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "VB"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WriteMaterialCS",
+            "fileName": "WriteMaterialCS.hlsl",
+            "entryPoint": "csmain",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "g_Materials",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Material"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "VB",
+            "fields": [
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "semantic": "Position"
+                },
+                {
+                    "name": "Color",
+                    "type": "Float3",
+                    "semantic": "Color"
+                },
+                {
+                    "name": "Normal",
+                    "type": "Float3",
+                    "semantic": "Normal"
+                },
+                {
+                    "name": "Tangent",
+                    "type": "Float4",
+                    "semantic": "Tangent"
+                },
+                {
+                    "name": "UV",
+                    "type": "Float2",
+                    "semantic": "UV"
+                },
+                {
+                    "name": "MaterialID",
+                    "type": "Int",
+                    "semantic": "MaterialID"
+                },
+                {
+                    "name": "ShapeID",
+                    "type": "Int",
+                    "semantic": "ShapeID"
+                }
+            ]
+        },
+        {
+            "name": "Material",
+            "fields": [
+                {
+                    "name": "DiffuseAlbedo",
+                    "type": "Float4"
+                },
+                {
+                    "name": "FresnelR0",
+                    "type": "Float3"
+                },
+                {
+                    "name": "Shininess",
+                    "type": "Float"
+                }
+            ]
+        }
+    ],
+    "fileCopies": [
+        {
+            "fileName": "..\\Utils\\QuadVB.csv",
+            "type": "Asset"
+        }
+    ],
+    "nodes": [
+        {
+            "resourceBuffer": {
+                "name": "ModelVertexBuffer",
+                "editorPos": [
+                    -973.0,
+                    -158.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "VB"
+                    }
+                },
+                "count": {
+                    "node": {
+                        "name": "ModelVertexBuffer"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Depth",
+                "editorPos": [
+                    -741.0,
+                    -14.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "D32_Float"
+                }
+            }
+        },
+        {
+            "actionDrawCall": {
+                "name": "BasePass",
+                "editorPos": [
+                    -603.0,
+                    -125.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "vertexShader": {
+                    "name": "BasePassVS"
+                },
+                "pixelShader": {
+                    "name": "BasePassPS"
+                },
+                "depthTest": "Greater",
+                "colorTargetSettings": [
+                    {
+                        "clearColor": [
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            1.0
+                        ],
+                        "srcBlend": "SrcAlpha",
+                        "destBlend": "InvSrcAlpha"
+                    },
+                    {
+                        "clearColor": [
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            1.0
+                        ]
+                    },
+                    {
+                        "clearColor": [
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            0.10000000149011612,
+                            1.0
+                        ]
+                    },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "cullMode": "Back",
+                "frontIsCounterClockwise": false,
+                "shadingRateImage": {
+                    "node": "Normal"
+                },
+                "vertexBuffer": {
+                    "node": "ModelViewerCS",
+                    "pin": "VertexBuffer"
+                },
+                "colorTargets": [
+                    {
+                        "node": "Position",
+                        "pin": "resource"
+                    },
+                    {
+                        "node": "Normal",
+                        "pin": "resource"
+                    },
+                    {
+                        "node": "Albedo",
+                        "pin": "resource"
+                    },
+                    {
+                        "node": "MaterialID",
+                        "pin": "resource"
+                    },
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "depthTarget": {
+                    "node": "Depth",
+                    "pin": "resource"
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "ModelViewerCS",
+                "editorPos": [
+                    -779.0,
+                    -158.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "VertexBuffer",
+                        "dstNode": "ModelVertexBuffer",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "ModelViewerCS"
+                },
+                "dispatchSize": {
+                    "node": {
+                        "name": "ModelVertexBuffer"
+                    },
+                    "indirectBuffer": {
+                        "node": "Normal"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Position",
+                "editorPos": [
+                    -741.0,
+                    34.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA16_Float"
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Normal",
+                "editorPos": [
+                    -741.0,
+                    82.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA16_Float"
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Albedo",
+                "editorPos": [
+                    -741.0,
+                    130.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "WriteMaterialCS",
+                "editorPos": [
+                    -661.0,
+                    335.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "g_Materials",
+                        "dstNode": "Materials",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "WriteMaterialCS"
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Materials",
+                "editorPos": [
+                    -815.0,
+                    338.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Material"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "MaterialID",
+                "editorPos": [
+                    -741.0,
+                    178.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "R32_Uint"
+                }
+            }
+        }
+    ],
+    "enums": [
+        {
+            "name": "ViewModes",
+            "items": [
+                {
+                    "label": "InputPos"
+                },
+                {
+                    "label": "OutputPos"
+                },
+                {
+                    "label": "VertexID"
+                },
+                {
+                    "label": "InstanceID"
+                },
+                {
+                    "label": "Color"
+                },
+                {
+                    "label": "Normal"
+                },
+                {
+                    "label": "Tangent"
+                },
+                {
+                    "label": "UV"
+                },
+                {
+                    "label": "MaterialID"
+                },
+                {
+                    "label": "ShapeID"
+                },
+                {
+                    "label": "ViewerColor"
+                },
+                {
+                    "label": "PlasticShaded"
+                }
+            ]
+        }
+    ]
+}

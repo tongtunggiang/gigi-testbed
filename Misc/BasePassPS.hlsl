@@ -14,6 +14,7 @@ struct PSOutput
 	float4 PositionTarget : SV_Target0;
 	float4 NormalTarget : SV_Target1;
 	float4 AlbedoTarget : SV_Target2;
+	float MaterialID : SV_Target3;
 };
 
 PSOutput psmain(PSInput input)
@@ -22,5 +23,6 @@ PSOutput psmain(PSInput input)
 	ret.PositionTarget = float4(input.WorldPos, 1.0);
 	ret.NormalTarget = float4(input.Normal, 1.0f);
 	ret.AlbedoTarget = input.Color;
+	ret.MaterialID = /*$(Variable:Material_Index)*/;
 	return ret;
 }

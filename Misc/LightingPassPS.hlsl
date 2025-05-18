@@ -157,9 +157,10 @@ PSOutput psmain(PSInput input)
 	float3 position = g_PositionTexture.Sample(GBufferPosition, input.uv).xyz;
 	float3 normal = normalize(g_NormalTexture.Sample(GBufferNormal, input.uv).xyz);
 	float3 albedo = g_AlbedoTexture.Sample(GBufferAlbedo, input.uv).xyz;
+    uint materialId = g_MaterialIDTexture.SampleLevel(GBufferMaterialID, input.uv, 0);
 
-    float3 color = ComputeLighting(g_Materials[0], position, normal, /*$(Variable:CameraPos)*/ - position, float3(1.0f,1.0f,1.0f));
-    ret.colorTarget = float4(color, 1.0f);
+    float4 color = ComputeLighting(g_Materials[materialId], position, normal, /*$(Variable:CameraPos)*/ - position, float3(1.0f,1.0f,1.0f));
+    ret.colorTarget = float4(color.xyz, 1.0f);
 	
 	return ret;
 }

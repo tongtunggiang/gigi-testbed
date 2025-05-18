@@ -1,0 +1,625 @@
+{
+    "$schema": "gigischema.json",
+    "version": "0.991b",
+    "variables": [
+        {
+            "name": "CameraPos",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "NumDirectionalLights",
+            "type": "Int",
+            "dflt": "1",
+            "visibility": "User"
+        },
+        {
+            "name": "NumPointLights",
+            "type": "Int",
+            "dflt": "0",
+            "visibility": "User"
+        },
+        {
+            "name": "NumSpotights",
+            "type": "Int",
+            "dflt": "0",
+            "visibility": "User"
+        },
+        {
+            "name": "NumMaterials",
+            "type": "Int",
+            "dflt": "1",
+            "visibility": "User"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "BasePassVS",
+            "fileName": "BasePassVS.hlsl",
+            "type": "Vertex",
+            "entryPoint": "vsmain"
+        },
+        {
+            "name": "BasePassPS",
+            "fileName": "BasePassPS.hlsl",
+            "type": "Pixel",
+            "entryPoint": "psmain"
+        },
+        {
+            "name": "ModelViewerCS",
+            "fileName": "ModelViewerCS.hlsl",
+            "entryPoint": "csmain",
+            "NumThreads": [
+                64,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "VertexBuffer",
+                    "type": "Buffer",
+                    "access": "UAV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "VB"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "LightingPassVS",
+            "fileName": "LightingPassVS.hlsl",
+            "type": "Vertex",
+            "entryPoint": "vsmain"
+        },
+        {
+            "name": "LightingPassPS",
+            "fileName": "LightingPassPS.hlsl",
+            "type": "Pixel",
+            "entryPoint": "psmain",
+            "resources": [
+                {
+                    "name": "g_PositionTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_NormalTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_AlbedoTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_MaterialIDTexture",
+                    "type": "Texture",
+                    "access": "SRV",
+                    "texture": {
+                        "viewType": "Float"
+                    }
+                },
+                {
+                    "name": "g_DirectionalLights",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Light"
+                        }
+                    }
+                },
+                {
+                    "name": "g_Materials",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Material"
+                        }
+                    }
+                }
+            ],
+            "samplers": [
+                {
+                    "name": "GBufferPosition"
+                },
+                {
+                    "name": "GBufferNormal"
+                },
+                {
+                    "name": "GBufferAlbedo"
+                },
+                {
+                    "name": "GBufferMaterialID",
+                    "filter": "MinMagMipPoint"
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "VB",
+            "fields": [
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "semantic": "Position"
+                },
+                {
+                    "name": "Color",
+                    "type": "Float3",
+                    "semantic": "Color"
+                },
+                {
+                    "name": "Normal",
+                    "type": "Float3",
+                    "semantic": "Normal"
+                },
+                {
+                    "name": "Tangent",
+                    "type": "Float4",
+                    "semantic": "Tangent"
+                },
+                {
+                    "name": "UV",
+                    "type": "Float2",
+                    "semantic": "UV"
+                },
+                {
+                    "name": "MaterialID",
+                    "type": "Int",
+                    "semantic": "MaterialID"
+                },
+                {
+                    "name": "ShapeID",
+                    "type": "Int",
+                    "semantic": "ShapeID"
+                }
+            ]
+        },
+        {
+            "name": "QuadVB",
+            "fields": [
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "semantic": "Position"
+                },
+                {
+                    "name": "UV",
+                    "type": "Float2",
+                    "semantic": "UV"
+                }
+            ]
+        },
+        {
+            "name": "Light",
+            "fields": [
+                {
+                    "name": "Strength",
+                    "type": "Float3"
+                },
+                {
+                    "name": "FalloffStart",
+                    "type": "Float",
+                    "comment": "Point/Spot light only"
+                },
+                {
+                    "name": "Direction",
+                    "type": "Float3",
+                    "comment": "Directional/Spot light only"
+                },
+                {
+                    "name": "FalloffEnd",
+                    "type": "Float",
+                    "comment": "Point/Spot light only"
+                },
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "comment": "Point light only"
+                },
+                {
+                    "name": "SpotPower",
+                    "type": "Float",
+                    "comment": "Spot light only"
+                }
+            ]
+        },
+        {
+            "name": "Material",
+            "fields": [
+                {
+                    "name": "DiffuseAlbedo",
+                    "type": "Float4"
+                },
+                {
+                    "name": "FresnelR0",
+                    "type": "Float3"
+                },
+                {
+                    "name": "Shininess",
+                    "type": "Float"
+                }
+            ]
+        },
+        {
+            "name": "InstanceBufferFormat",
+            "forceHostVisible": true,
+            "fields": [
+                {
+                    "name": "Offset",
+                    "type": "Float3"
+                },
+                {
+                    "name": "Scale",
+                    "type": "Float",
+                    "comment": "Uniform scale"
+                }
+            ]
+        }
+    ],
+    "fileCopies": [
+        {
+            "fileName": "..\\Utils\\QuadVB.csv",
+            "type": "Asset"
+        }
+    ],
+    "nodes": [
+        {
+            "actionDrawCall": {
+                "name": "LightingPass",
+                "editorPos": [
+                    885.0,
+                    99.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "g_PositionTexture",
+                        "dstNode": "Position",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_NormalTexture",
+                        "dstNode": "Normal",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_AlbedoTexture",
+                        "dstNode": "Albedo",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_MaterialIDTexture",
+                        "dstNode": "MaterialID",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_DirectionalLights",
+                        "dstNode": "DirectionalLights",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_Materials",
+                        "dstNode": "Materials ",
+                        "dstPin": "resource"
+                    }
+                ],
+                "vertexShader": {
+                    "name": "LightingPassVS"
+                },
+                "pixelShader": {
+                    "name": "LightingPassPS"
+                },
+                "shadingRateImage": {
+                    "node": "LightingPass"
+                },
+                "vertexBuffer": {
+                    "node": "Quad",
+                    "pin": "resource"
+                },
+                "indexBuffer": {
+                    "node": "LightingPass"
+                },
+                "colorTargets": [
+                    {
+                        "node": "SceneColor",
+                        "pin": "resource"
+                    },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "depthTarget": {
+                    "node": "LightingPass"
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "SceneColor",
+                "editorPos": [
+                    740.0,
+                    428.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "RGBA8_Unorm_sRGB"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Quad",
+                "editorPos": [
+                    740.0,
+                    380.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "QuadVB"
+                    }
+                },
+                "count": {
+                    "multiply": 6
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "DirectionalLights",
+                "editorPos": [
+                    605.0,
+                    258.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumDirectionalLights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "PointLights",
+                "comment": "TODO",
+                "editorPos": [
+                    580.0,
+                    -180.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumPointLights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "SpotLights",
+                "comment": "TODO",
+                "editorPos": [
+                    596.0,
+                    -132.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumSpotights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Materials ",
+                "editorPos": [
+                    603.0,
+                    306.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Material"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumMaterials"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Position",
+                "editorPos": [
+                    603.0,
+                    50.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Normal",
+                "editorPos": [
+                    603.0,
+                    98.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Albedo",
+                "editorPos": [
+                    603.0,
+                    146.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Depth",
+                "comment": "TODO",
+                "editorPos": [
+                    603.0,
+                    2.0
+                ],
+                "format": {
+                    "format": "D32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "MaterialID",
+                "editorPos": [
+                    603.0,
+                    194.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "format": "R32_Float"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        }
+    ],
+    "enums": [
+        {
+            "name": "ViewModes",
+            "items": [
+                {
+                    "label": "InputPos"
+                },
+                {
+                    "label": "OutputPos"
+                },
+                {
+                    "label": "VertexID"
+                },
+                {
+                    "label": "InstanceID"
+                },
+                {
+                    "label": "Color"
+                },
+                {
+                    "label": "Normal"
+                },
+                {
+                    "label": "Tangent"
+                },
+                {
+                    "label": "UV"
+                },
+                {
+                    "label": "MaterialID"
+                },
+                {
+                    "label": "ShapeID"
+                },
+                {
+                    "label": "ViewerColor"
+                },
+                {
+                    "label": "PlasticShaded"
+                }
+            ]
+        }
+    ],
+    "editorGroupNodes": [
+        {
+            "name": "LIghting pass",
+            "position": [
+                512.0,
+                -320.0
+            ],
+            "size": [
+                592.0,
+                972.0
+            ]
+        }
+    ]
+}
