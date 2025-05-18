@@ -1,0 +1,80 @@
+# Image
+*.jpg filter=lfs diff=lfs merge=lfs
+*.jpeg filter=lfs diff=lfs merge=lfs
+*.png filter=lfs diff=lfs merge=lfs
+*.apng filter=lfs diff=lfs merge=lfs
+*.atsc filter=lfs diff=lfs merge=lfs
+*.gif filter=lfs diff=lfs merge=lfs
+*.bmp filter=lfs diff=lfs merge=lfs
+*.exr filter=lfs diff=lfs merge=lfs
+*.tga filter=lfs diff=lfs merge=lfs
+*.tiff filter=lfs diff=lfs merge=lfs
+*.tif filter=lfs diff=lfs merge=lfs
+*.iff filter=lfs diff=lfs merge=lfs
+*.pict filter=lfs diff=lfs merge=lfs
+*.dds filter=lfs diff=lfs merge=lfs
+*.xcf filter=lfs diff=lfs merge=lfs
+*.leo filter=lfs diff=lfs merge=lfs
+*.kra filter=lfs diff=lfs merge=lfs
+*.kpp filter=lfs diff=lfs merge=lfs
+*.clip filter=lfs diff=lfs merge=lfs
+*.webm filter=lfs diff=lfs merge=lfs
+*.webp filter=lfs diff=lfs merge=lfs
+*.svg filter=lfs diff=lfs merge=lfs
+*.svgz filter=lfs diff=lfs merge=lfs
+*.psd filter=lfs diff=lfs merge=lfs
+*.afphoto filter=lfs diff=lfs merge=lfs
+*.afdesign filter=lfs diff=lfs merge=lfs
+
+# Audio
+*.mp3 filter=lfs diff=lfs merge=lfs
+*.ogg filter=lfs diff=lfs merge=lfs
+*.wav filter=lfs diff=lfs merge=lfs
+*.aiff filter=lfs diff=lfs merge=lfs
+*.aif filter=lfs diff=lfs merge=lfs
+*.mod filter=lfs diff=lfs merge=lfs
+*.it filter=lfs diff=lfs merge=lfs
+*.s3m filter=lfs diff=lfs merge=lfs
+*.xm filter=lfs diff=lfs merge=lfs
+# Video
+*.mov filter=lfs diff=lfs merge=lfs
+*.avi filter=lfs diff=lfs merge=lfs
+*.asf filter=lfs diff=lfs merge=lfs
+*.mpg filter=lfs diff=lfs merge=lfs
+*.mpeg filter=lfs diff=lfs merge=lfs
+*.mp4 filter=lfs diff=lfs merge=lfs
+*.flv filter=lfs diff=lfs merge=lfs
+*.ogv filter=lfs diff=lfs merge=lfs
+*.wmv filter=lfs diff=lfs merge=lfs
+# 3D
+*.fbx filter=lfs diff=lfs merge=lfs
+*.obj filter=lfs diff=lfs merge=lfs
+*.max filter=lfs diff=lfs merge=lfs
+*.blend filter=lfs diff=lfs merge=lfs
+*.blender filter=lfs diff=lfs merge=lfs
+*.dae filter=lfs diff=lfs merge=lfs
+*.mb filter=lfs diff=lfs merge=lfs
+*.ma filter=lfs diff=lfs merge=lfs
+*.3ds filter=lfs diff=lfs merge=lfs
+*.dfx filter=lfs diff=lfs merge=lfs
+*.c4d filter=lfs diff=lfs merge=lfs
+*.lwo filter=lfs diff=lfs merge=lfs
+*.lwo2 filter=lfs diff=lfs merge=lfs
+*.abc filter=lfs diff=lfs merge=lfs
+*.3dm filter=lfs diff=lfs merge=lfs
+*.bin filter=lfs diff=lfs merge=lfs
+*.glb filter=lfs diff=lfs merge=lfs
+# Executables
+*.exe filter=lfs diff=lfs merge=lfs
+*.dll filter=lfs diff=lfs merge=lfs
+*.so filter=lfs diff=lfs merge=lfs
+*.pdb filter=lfs diff=lfs merge=lfs
+*.mdb filter=lfs diff=lfs merge=lfs
+# Packaging
+*.zip filter=lfs diff=lfs merge=lfs
+*.7z filter=lfs diff=lfs merge=lfs
+*.gz filter=lfs diff=lfs merge=lfs
+*.rar filter=lfs diff=lfs merge=lfs
+*.tar filter=lfs diff=lfs merge=lfs
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
