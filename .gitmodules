@@ -1,0 +1,3 @@
+[submodule "Assets/Common3DTestModels"]
+	path = Assets/Common3DTestModels
+	url = https://github.com/alecjacobson/common-3d-test-models.git
