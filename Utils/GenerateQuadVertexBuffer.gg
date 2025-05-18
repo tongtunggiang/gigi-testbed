@@ -9,7 +9,7 @@
             "fileName": "GenerateQuadVertexBufferCS.hlsl",
             "entryPoint": "MainCS",
             "NumThreads": [
-                6,
+                1,
                 1,
                 1
             ],
@@ -20,7 +20,7 @@
                     "access": "UAV",
                     "buffer": {
                         "typeStruct": {
-                            "name": "VB"
+                            "name": "QuadVB"
                         }
                     }
                 }
@@ -29,34 +29,22 @@
     ],
     "structs": [
         {
-            "name": "VB",
+            "name": "QuadVB",
             "fields": [
                 {
                     "name": "Position",
-                    "type": "Float2"
+                    "type": "Float3",
+                    "semantic": "Position"
+                },
+                {
+                    "name": "UV",
+                    "type": "Float2",
+                    "semantic": "UV"
                 }
             ]
         }
     ],
     "nodes": [
-        {
-            "resourceBuffer": {
-                "name": "VertexBuffer",
-                "editorPos": [
-                    -329.0,
-                    -93.0
-                ],
-                "visibility": "Exported",
-                "format": {
-                    "structureType": {
-                        "name": "VB"
-                    }
-                },
-                "count": {
-                    "multiply": 6
-                }
-            }
-        },
         {
             "actionComputeShader": {
                 "name": "GenerateQuadVB",
@@ -71,12 +59,30 @@
                 "connections": [
                     {
                         "srcPin": "InOutVertexBuffer",
-                        "dstNode": "VertexBuffer",
+                        "dstNode": "QuadVB",
                         "dstPin": "resource"
                     }
                 ],
                 "shader": {
                     "name": "GenerateQuadVertexBufferCS"
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "QuadVB",
+                "editorPos": [
+                    -341.0,
+                    -94.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "structureType": {
+                        "name": "QuadVB"
+                    }
+                },
+                "count": {
+                    "multiply": 6
                 }
             }
         }

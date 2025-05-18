@@ -3,22 +3,13 @@
 
 /*$(_compute:MainCS)*/(uint3 DTid : SV_DispatchThreadID)
 {
-	int vertexID = int(DTid.x);
-    float2 position = float2(-1.0f, -1.0f);
-    float2 uv = float2(0.0f, 0.0f);
-	switch(vertexID % 6)
-	{
-		// first triangle, couter clock wise
-		case 0: position = float2(-1.0f, -1.0f); uv = float2(0.0f, 0.0f); break;
-		case 1: position = float2(1.0f, -1.0f); uv = float2(1.0f, 0.0f);  break;
-		case 2: position = float2(-1.0f, 1.0f); uv = float2(0.0f, 1.0f);  break;
+	// first triangle, couter clock wise
+	InOutVertexBuffer[0].Position = float3(-1.0f, -1.0f, 1.0f); InOutVertexBuffer[0].UV = float2(0.0f, 0.0f);
+	InOutVertexBuffer[1].Position = float3( 1.0f, -1.0f, 1.0f); InOutVertexBuffer[1].UV = float2(1.0f, 0.0f);
+	InOutVertexBuffer[2].Position = float3(-1.0f,  1.0f, 1.0f); InOutVertexBuffer[2].UV = float2(0.0f, 1.0f);
 
-		// second triangle, clock wise
-		case 3: position = float2(-1.0f, 1.0f); uv = float2(0.0f, 1.0f);  break;
-		case 4: position = float2(1.0f, 1.0f); uv = float2(1.0f, 1.0f);  break;
-		case 5: position = float2(1.0f, -1.0f); uv = float2(1.0f, 0.0f);  break;
-	}
-	
-	InOutVertexBuffer[vertexID].Position = position;
-	InOutVertexBuffer[vertexID].UV = uv;
+	// second triangle, clock wise
+	InOutVertexBuffer[3].Position = float3(-1.0f,  1.0f, 1.0f); InOutVertexBuffer[3].UV = float2(0.0f, 1.0f);
+	InOutVertexBuffer[4].Position = float3( 1.0f,  1.0f, 1.0f); InOutVertexBuffer[4].UV = float2(1.0f, 1.0f);
+	InOutVertexBuffer[5].Position = float3( 1.0f, -1.0f, 1.0f); InOutVertexBuffer[5].UV = float2(1.0f, 0.0f);
 }

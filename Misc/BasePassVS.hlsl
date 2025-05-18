@@ -12,6 +12,10 @@ struct VSInput
 	float2 UV         : TEXCOORD0;
 	int MaterialID    : TEXCOORD1;
 	int ShapeID       : TEXCOORD2;
+
+	// Extra info from instance buffer
+	float3 offset : TEXCOORD3;
+	float scale : TEXCOORD4;
 };
 
 struct VSOutput // AKA PSInput
@@ -24,7 +28,7 @@ struct VSOutput // AKA PSInput
 
 VSOutput vsmain(VSInput input)
 {
-	float4 outPos = mul(float4(input.Position, 1.0f), /*$(Variable:ViewProjMtx)*/);
+	float4 outPos = mul(float4(input.Position * input.scale + input.offset, 1.0f), /*$(Variable:ViewProjMtx)*/);
 
 	VSOutput ret = (VSOutput)0;	
 	ret.Position = outPos;

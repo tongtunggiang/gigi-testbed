@@ -45,6 +45,26 @@
         {
             "name": "InvViewMtx",
             "type": "Float4x4"
+        },
+        {
+            "name": "NumDirectionalLights",
+            "type": "Int",
+            "dflt": "1"
+        },
+        {
+            "name": "NumPointLights",
+            "type": "Int",
+            "dflt": "0"
+        },
+        {
+            "name": "NumSpotights",
+            "type": "Int",
+            "dflt": "0"
+        },
+        {
+            "name": "NumMaterials",
+            "type": "Int",
+            "dflt": "1"
         }
     ],
     "shaders": [
@@ -79,6 +99,66 @@
                             "name": "VB"
                         }
                     }
+                }
+            ]
+        },
+        {
+            "name": "LightingPassVS",
+            "fileName": "LightingPassVS.hlsl",
+            "type": "Vertex",
+            "entryPoint": "vsmain"
+        },
+        {
+            "name": "LightingPassPS",
+            "fileName": "LightingPassPS.hlsl",
+            "type": "Pixel",
+            "entryPoint": "psmain",
+            "resources": [
+                {
+                    "name": "g_PositionTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_NormalTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_AlbedoTexture",
+                    "type": "Texture",
+                    "access": "SRV"
+                },
+                {
+                    "name": "g_DirectionalLights",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Light"
+                        }
+                    }
+                },
+                {
+                    "name": "g_Materials",
+                    "type": "Buffer",
+                    "access": "SRV",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Material"
+                        }
+                    }
+                }
+            ],
+            "samplers": [
+                {
+                    "name": "GBufferPosition"
+                },
+                {
+                    "name": "GBufferNormal"
+                },
+                {
+                    "name": "GBufferAlbedo"
                 }
             ]
         }
@@ -123,17 +203,109 @@
                     "semantic": "ShapeID"
                 }
             ]
+        },
+        {
+            "name": "QuadVB",
+            "fields": [
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "semantic": "Position"
+                },
+                {
+                    "name": "UV",
+                    "type": "Float2",
+                    "semantic": "UV"
+                }
+            ]
+        },
+        {
+            "name": "Light",
+            "fields": [
+                {
+                    "name": "Strength",
+                    "type": "Float3"
+                },
+                {
+                    "name": "FalloffStart",
+                    "type": "Float",
+                    "comment": "Point/Spot light only"
+                },
+                {
+                    "name": "Direction",
+                    "type": "Float3",
+                    "comment": "Directional/Spot light only"
+                },
+                {
+                    "name": "FalloffEnd",
+                    "type": "Float",
+                    "comment": "Point/Spot light only"
+                },
+                {
+                    "name": "Position",
+                    "type": "Float3",
+                    "comment": "Point light only"
+                },
+                {
+                    "name": "SpotPower",
+                    "type": "Float",
+                    "comment": "Spot light only"
+                }
+            ]
+        },
+        {
+            "name": "Material",
+            "fields": [
+                {
+                    "name": "DiffuseAlbedo",
+                    "type": "Float4"
+                },
+                {
+                    "name": "FresnelR0",
+                    "type": "Float3"
+                },
+                {
+                    "name": "Shininess",
+                    "type": "Float"
+                }
+            ]
+        },
+        {
+            "name": "InstanceBufferFormat",
+            "forceHostVisible": true,
+            "fields": [
+                {
+                    "name": "Offset",
+                    "type": "Float3"
+                },
+                {
+                    "name": "Scale",
+                    "type": "Float",
+                    "comment": "Uniform scale"
+                }
+            ]
+        }
+    ],
+    "fileCopies": [
+        {
+            "fileName": "..\\Utils\\QuadVB.csv",
+            "type": "Asset"
         }
     ],
     "nodes": [
         {
             "resourceBuffer": {
-                "name": "VertexBuffer",
+                "name": "ModelVertexBuffer",
                 "editorPos": [
-                    -217.0,
+                    -157.0,
                     -158.0
                 ],
-                "visibility": "Imported"
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "VB"
+                    }
+                }
             }
         },
         {
@@ -141,7 +313,7 @@
                 "name": "Depth",
                 "editorPos": [
                     75.0,
-                    -78.0
+                    -14.0
                 ],
                 "format": {
                     "format": "D32_Float"
@@ -155,12 +327,13 @@
         },
         {
             "actionDrawCall": {
-                "name": "Rasterize",
+                "name": "GeometryPass",
                 "editorPos": [
                     213.0,
                     -125.0
                 ],
                 "linkProperties": [
+                    {},
                     {},
                     {},
                     {},
@@ -177,6 +350,7 @@
                 "pixelShader": {
                     "name": "BasePassPS"
                 },
+                "instanceCount": 3,
                 "depthTargetClear": true,
                 "depthTest": "Greater",
                 "colorTargetSettings": [
@@ -215,6 +389,7 @@
                     {},
                     {}
                 ],
+                "cullMode": "Back",
                 "frontIsCounterClockwise": false,
                 "shadingRateImage": {
                     "node": "Normal"
@@ -223,11 +398,9 @@
                     "node": "ModelViewerCS",
                     "pin": "VertexBuffer"
                 },
-                "indexBuffer": {
-                    "node": "Normal"
-                },
                 "instanceBuffer": {
-                    "node": "Normal"
+                    "node": "InstanceBuffer",
+                    "pin": "resource"
                 },
                 "colorTargets": [
                     {
@@ -242,7 +415,9 @@
                         "node": "Albedo",
                         "pin": "resource"
                     },
-                    {},
+                    {
+                        "node": "LightingPass"
+                    },
                     {},
                     {},
                     {},
@@ -268,7 +443,7 @@
                 "connections": [
                     {
                         "srcPin": "VertexBuffer",
-                        "dstNode": "VertexBuffer",
+                        "dstNode": "ModelVertexBuffer",
                         "dstPin": "resource"
                     }
                 ],
@@ -277,7 +452,7 @@
                 },
                 "dispatchSize": {
                     "node": {
-                        "name": "VertexBuffer"
+                        "name": "ModelVertexBuffer"
                     },
                     "indirectBuffer": {
                         "node": "Normal"
@@ -290,7 +465,7 @@
                 "name": "Position",
                 "editorPos": [
                     75.0,
-                    -30.0
+                    34.0
                 ],
                 "format": {
                     "format": "RGBA16_Float"
@@ -307,7 +482,7 @@
                 "name": "Normal",
                 "editorPos": [
                     75.0,
-                    18.0
+                    82.0
                 ],
                 "format": {
                     "format": "RGBA16_Float"
@@ -324,7 +499,7 @@
                 "name": "Albedo",
                 "editorPos": [
                     75.0,
-                    66.0
+                    130.0
                 ],
                 "format": {
                     "format": "RGBA8_Unorm"
@@ -332,6 +507,210 @@
                 "size": {
                     "variable": {
                         "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "actionDrawCall": {
+                "name": "LightingPass",
+                "editorPos": [
+                    558.0,
+                    54.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "g_PositionTexture",
+                        "dstNode": "GeometryPass",
+                        "dstPin": "colorTarget0"
+                    },
+                    {
+                        "srcPin": "g_NormalTexture",
+                        "dstNode": "GeometryPass",
+                        "dstPin": "colorTarget1"
+                    },
+                    {
+                        "srcPin": "g_AlbedoTexture",
+                        "dstNode": "GeometryPass",
+                        "dstPin": "colorTarget2"
+                    },
+                    {
+                        "srcPin": "g_DirectionalLights",
+                        "dstNode": "DirectionalLights",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "g_Materials",
+                        "dstNode": "Materials ",
+                        "dstPin": "resource"
+                    }
+                ],
+                "vertexShader": {
+                    "name": "LightingPassVS"
+                },
+                "pixelShader": {
+                    "name": "LightingPassPS"
+                },
+                "shadingRateImage": {
+                    "node": "LightingPass"
+                },
+                "vertexBuffer": {
+                    "node": "Quad",
+                    "pin": "resource"
+                },
+                "indexBuffer": {
+                    "node": "LightingPass"
+                },
+                "colorTargets": [
+                    {
+                        "node": "SceneColor",
+                        "pin": "resource"
+                    },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "depthTarget": {
+                    "node": "LightingPass"
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "SceneColor",
+                "editorPos": [
+                    395.0,
+                    322.0
+                ],
+                "format": {
+                    "format": "RGBA8_Unorm_sRGB"
+                },
+                "size": {
+                    "variable": {
+                        "name": "RenderSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Quad",
+                "editorPos": [
+                    395.0,
+                    274.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "QuadVB"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "DirectionalLights",
+                "editorPos": [
+                    253.0,
+                    114.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumDirectionalLights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "PointLights",
+                "editorPos": [
+                    379.0,
+                    -238.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumPointLights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "SpotLights",
+                "editorPos": [
+                    395.0,
+                    -190.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Light"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumSpotights"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "InstanceBuffer",
+                "editorPos": [
+                    43.0,
+                    -78.0
+                ],
+                "visibility": "Imported"
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Materials ",
+                "editorPos": [
+                    250.0,
+                    178.0
+                ],
+                "visibility": "Imported",
+                "format": {
+                    "structureType": {
+                        "name": "Material"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumMaterials"
                     }
                 }
             }
