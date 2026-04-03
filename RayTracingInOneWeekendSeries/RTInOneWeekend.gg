@@ -1,0 +1,611 @@
+{
+    "$schema": "gigischema.json",
+    "name": "Final render",
+    "version": "1.01",
+    "variables": [
+        {
+            "name": "MouseState",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "MouseStateLastFrame",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iResolution",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iTime",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iTimeDelta",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrameRate",
+            "type": "Float",
+            "dflt": "0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "iFrame",
+            "type": "Int",
+            "dflt": "0",
+            "visibility": "Host"
+        },
+        {
+            "name": "iMouse",
+            "type": "Float4",
+            "dflt": "0.0f, 0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "JitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "InvJitteredViewProjMtx",
+            "type": "Float4x4",
+            "dflt": "1.0f, 0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraPos",
+            "type": "Float3",
+            "dflt": "0.0f, 0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraAltitudeAzimuth",
+            "type": "Float2",
+            "dflt": "0.0f, 0.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraChanged",
+            "type": "Bool",
+            "dflt": "false",
+            "visibility": "Host"
+        },
+        {
+            "name": "CameraJitter",
+            "type": "Float2",
+            "dflt": "0.5f, 0.5f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ShadingRateImageTileSize",
+            "type": "Uint",
+            "dflt": "16",
+            "visibility": "Host"
+        },
+        {
+            "name": "WindowSize",
+            "type": "Float2",
+            "dflt": "1.0f, 1.0f",
+            "visibility": "Host"
+        },
+        {
+            "name": "ImageSize",
+            "type": "Int2",
+            "dflt": "512,256",
+            "visibility": "User"
+        },
+        {
+            "name": "NumSamplesPerPixel",
+            "type": "Int",
+            "dflt": "4",
+            "visibility": "User",
+            "UISettings": {
+                "UIHint": "Slider",
+                "min": "1",
+                "max": "64",
+                "step": "1"
+            }
+        },
+        {
+            "name": "CameraVFOV",
+            "comment": "Vertical view angle (field of view)",
+            "type": "Float",
+            "dflt": "90",
+            "UISettings": {
+                "UIHint": "Slider",
+                "min": "0",
+                "max": "179",
+                "step": "1"
+            }
+        },
+        {
+            "name": "CameraUp",
+            "type": "Float3"
+        },
+        {
+            "name": "CameraLeft",
+            "type": "Float3"
+        },
+        {
+            "name": "CameraForward",
+            "type": "Float3"
+        },
+        {
+            "name": "CameraDefocusAngle",
+            "type": "Float",
+            "dflt": "0",
+            "visibility": "User",
+            "UISettings": {
+                "UIHint": "Slider",
+                "min": "0",
+                "max": "179"
+            }
+        },
+        {
+            "name": "CameraFocusDistance",
+            "type": "Float",
+            "dflt": "10",
+            "visibility": "User"
+        },
+        {
+            "name": "NumSpheres",
+            "type": "Int",
+            "visibility": "User",
+            "UISettings": {
+                "UIHint": "Slider",
+                "min": "4",
+                "max": "500"
+            }
+        },
+        {
+            "name": "UseGammaCorrection",
+            "type": "Bool",
+            "visibility": "User"
+        }
+    ],
+    "shaders": [
+        {
+            "name": "CalculateGlobalCameraBufferCS",
+            "fileName": "CalculateGlobalCameraBuffer.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "Camera",
+                    "access": "UAV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "PathTracerCS",
+            "fileName": "PathTracer.hlsl",
+            "entryPoint": "MainCS",
+            "resources": [
+                {
+                    "name": "Camera",
+                    "access": "SRV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "CameraInfo"
+                        }
+                    }
+                },
+                {
+                    "name": "Materials",
+                    "access": "SRV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Material"
+                        }
+                    }
+                },
+                {
+                    "name": "Spheres",
+                    "access": "SRV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Sphere"
+                        }
+                    }
+                },
+                {
+                    "name": "Output",
+                    "access": "UAV",
+                    "type": "Texture"
+                }
+            ]
+        },
+        {
+            "name": "InitSceneCS",
+            "fileName": "Scene.hlsl",
+            "entryPoint": "MainCS",
+            "NumThreads": [
+                1,
+                1,
+                1
+            ],
+            "resources": [
+                {
+                    "name": "Materials",
+                    "access": "UAV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Material"
+                        }
+                    }
+                },
+                {
+                    "name": "Spheres",
+                    "access": "UAV",
+                    "type": "Buffer",
+                    "buffer": {
+                        "typeStruct": {
+                            "name": "Sphere"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "structs": [
+        {
+            "name": "CameraInfo",
+            "fields": [
+                {
+                    "name": "aspectRatio",
+                    "type": "Float"
+                },
+                {
+                    "name": "cameraCenter",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_u",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixelDelta_v",
+                    "type": "Float3"
+                },
+                {
+                    "name": "pixel00_loc",
+                    "type": "Float3"
+                },
+                {
+                    "name": "numSamplesPerPixel",
+                    "type": "Int"
+                },
+                {
+                    "name": "pixelSampleScale",
+                    "type": "Float"
+                },
+                {
+                    "name": "u",
+                    "type": "Float3",
+                    "dflt": "Basis vector - up"
+                },
+                {
+                    "name": "v",
+                    "type": "Float3",
+                    "dflt": "Basis vector - right"
+                },
+                {
+                    "name": "w",
+                    "type": "Float3",
+                    "dflt": "Basis vector - front"
+                },
+                {
+                    "name": "defocusDiskU",
+                    "type": "Float3"
+                },
+                {
+                    "name": "defocusDiskV",
+                    "type": "Float3"
+                }
+            ]
+        },
+        {
+            "name": "Sphere",
+            "fields": [
+                {
+                    "name": "center",
+                    "type": "Float3"
+                },
+                {
+                    "name": "radius",
+                    "type": "Float"
+                },
+                {
+                    "name": "materialIndex",
+                    "type": "Int"
+                }
+            ]
+        },
+        {
+            "name": "Material",
+            "fields": [
+                {
+                    "name": "type",
+                    "type": "Int",
+                    "Enum": "MaterialType"
+                },
+                {
+                    "name": "color",
+                    "type": "Float3"
+                },
+                {
+                    "name": "fuzz",
+                    "type": "Float"
+                },
+                {
+                    "name": "refractionIndex",
+                    "type": "Float"
+                }
+            ]
+        }
+    ],
+    "fileCopies": [
+        {
+            "fileName": "Random.hsh",
+            "type": "Shader"
+        }
+    ],
+    "nodes": [
+        {
+            "actionComputeShader": {
+                "name": "Path Tracer",
+                "comment": "Output a simple sky",
+                "editorPos": [
+                    229.0,
+                    -94.0
+                ],
+                "linkProperties": [
+                    {},
+                    {},
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "Calculate Global Camera Buffer",
+                        "dstPin": "Camera"
+                    },
+                    {
+                        "srcPin": "Materials",
+                        "dstNode": "Init Scene",
+                        "dstPin": "Materials"
+                    },
+                    {
+                        "srcPin": "Spheres",
+                        "dstNode": "Init Scene",
+                        "dstPin": "Spheres"
+                    },
+                    {
+                        "srcPin": "Output",
+                        "dstNode": "Output",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "PathTracerCS"
+                },
+                "dispatchSize": {
+                    "node": {
+                        "name": "Output"
+                    }
+                }
+            }
+        },
+        {
+            "resourceTexture": {
+                "name": "Output",
+                "editorPos": [
+                    -85.0,
+                    98.0
+                ],
+                "visibility": "Exported",
+                "format": {
+                    "format": "RGBA8_Unorm"
+                },
+                "size": {
+                    "variable": {
+                        "name": "ImageSize"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "GlobalCamera",
+                "comment": "Do global camera calculation in a separate pass.,",
+                "editorPos": [
+                    -580.0,
+                    -286.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "CameraInfo"
+                    }
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "Calculate Global Camera Buffer",
+                "editorPos": [
+                    -382.0,
+                    -273.0
+                ],
+                "linkProperties": [
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Camera",
+                        "dstNode": "GlobalCamera",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "CalculateGlobalCameraBufferCS"
+                }
+            }
+        },
+        {
+            "actionComputeShader": {
+                "name": "Init Scene",
+                "editorPos": [
+                    -296.0,
+                    -94.0
+                ],
+                "linkProperties": [
+                    {},
+                    {}
+                ],
+                "connections": [
+                    {
+                        "srcPin": "Materials",
+                        "dstNode": "Materials",
+                        "dstPin": "resource"
+                    },
+                    {
+                        "srcPin": "Spheres",
+                        "dstNode": "Spheres",
+                        "dstPin": "resource"
+                    }
+                ],
+                "shader": {
+                    "name": "InitSceneCS"
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Spheres",
+                "editorPos": [
+                    -421.0,
+                    -14.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "Sphere"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumSpheres"
+                    }
+                }
+            }
+        },
+        {
+            "resourceBuffer": {
+                "name": "Materials",
+                "editorPos": [
+                    -437.0,
+                    -110.0
+                ],
+                "format": {
+                    "structureType": {
+                        "name": "Material"
+                    }
+                },
+                "count": {
+                    "variable": {
+                        "name": "NumSpheres"
+                    }
+                }
+            }
+        }
+    ],
+    "enums": [
+        {
+            "name": "MaterialType",
+            "items": [
+                {
+                    "label": "Lambertian"
+                },
+                {
+                    "label": "Metal"
+                },
+                {
+                    "label": "Dielectric"
+                }
+            ]
+        }
+    ]
+}
